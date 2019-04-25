@@ -17,6 +17,8 @@ import Json.Encode exposing (Value)
 
 import Task exposing (..)
 
+import Menu
+
 
 ---- MODEL ----
 
@@ -95,33 +97,54 @@ animeDecoder : Json.Decode.Decoder -> Anime
         ("name" := Json.Decode.string)
 
 
+animeSearch : ??? -> Animes
+
+
 ---- VIEW ----
 
 
+viewConfig : Menu.ViewConfig Anime
+viewConfig =
+  let
+    customizedLi keySelected mouseSelected anime =
+      { attributes = [ classList [ ("autocomplete-item", True), ("is-selected", keySelected || mouseSelected) ] ]
+      , children = [ Html.text anime.name ]
+      }
+  in
+    Menu.viewConfig
+      { toId = .name
+      , ul = [ class "autocomplete-list" ] -- set classes for your list
+      , li = customizedLi -- given selection states and a person, create some Html!
+      }
+
 view : Model -> Html Msg
 view model = 
-    div [ class "bingo-table" ]
-        [ CDN.stylesheet
-        , Table.simpleTable
-            ( Table.simpleThead []
-            , Table.tbody []
-                [ Table.tr []
-                    [ Table.td [] [ text "1" ]
-                    , Table.td [] [ text "2" ]
-                    , Table.td [] [ text "3" ]
+    div [] 
+        [ input [ onInput SetQuery ] []
+        , Html.App.map SetAutocompleteState (Menu.view viewConfig 5 autoState animeSearch)
+        , div [ class "bingo-table" ]
+            [ CDN.stylesheet
+            , Table.simpleTable
+                ( Table.simpleThead []
+                , Table.tbody []
+                    [ Table.tr []
+                        [ Table.td [] [ text "1" ]
+                        , Table.td [] [ text "2" ]
+                        , Table.td [] [ text "3" ]
+                        ]
+                    , Table.tr []
+                        [ Table.td [] [ text "4" ]
+                        , Table.td [] [ text "5" ]
+                        , Table.td [] [ text "6" ]
+                        ]
+                    , Table.tr []
+                        [ Table.td [] [ text "7" ]
+                        , Table.td [] [ text "8" ]
+                        , Table.td [] [ text "9" ]
+                        ]
                     ]
-                , Table.tr []
-                    [ Table.td [] [ text "4" ]
-                    , Table.td [] [ text "5" ]
-                    , Table.td [] [ text "6" ]
-                    ]
-                , Table.tr []
-                    [ Table.td [] [ text "7" ]
-                    , Table.td [] [ text "8" ]
-                    , Table.td [] [ text "9" ]
-                    ]
-                ]
-            )
+                )
+            ]
         ]
 
 
