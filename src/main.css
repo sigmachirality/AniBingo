@@ -28,12 +28,12 @@ img {
 
 .bingo-table {
   background-color: rgb(51, 51, 51);
-  width: 450px;
-
+  width: 500px;
 }
 
 .bingo-table td {
   height: 200px;
-  width: 150px;
+  width: 145px;
   padding: 10px;
+  background-color: rgb(255, 255, 255);
 }

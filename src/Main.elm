@@ -3,8 +3,19 @@ module Main exposing (..)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
+
 import Bootstrap.CDN as CDN
 import Bootstrap.Table as Table
+
+import JsonApi
+import JsonApi.Decode as Decode
+import JsonApi.Decode exposing ((:=))
+import JsonApi.Encode as Encode
+import JsonApi.Resources as Resource
+import JsonApi.Documents as Document
+import Json.Encode exposing (Value)
+
+import Task exposing (..)
 
 
 ---- MODEL ----
@@ -31,6 +42,57 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     ( model, Cmd.none )
 
+
+---- CONSTANTS ----
+
+
+root = "https://graphql.anilist.co"
+query = 
+"""
+query ($id: Int, $page: Int, $perPage: Int, $search: String) {
+  Page (page: $page, perPage: $perPage) {
+    pageInfo {
+      total
+      currentPage
+      lastPage
+      hasNextPage
+      perPage
+    }
+    media (id: $id, search: $search) {
+      id
+      romaji
+    }
+  }
+}
+"""
+
+
+---- HELPERS ----
+
+
+type alias Anime = 
+    { id : String
+    , name : String
+    }
+
+
+type alias Animes = [ Anime ]
+
+
+encodeSearch : String -> Int -> Value
+encodeSearch query pageNum = 
+    Resources.build "variables"
+        |> Resources.withAttributes
+            [ ( "search", query )
+            , ( "page", pageNum )
+            ]
+        |> Result.map Encode.clientResource
+
+
+animeDecoder : Json.Decode.Decoder -> Anime
+    Json.Decode.object2 Anime
+        ("id" := Json.Decode.string)
+        ("name" := Json.Decode.string)
 
 
 ---- VIEW ----
