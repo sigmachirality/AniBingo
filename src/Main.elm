@@ -24,7 +24,9 @@ import Menu
 
 
 type alias Model =
-    {}
+    { board : Animes
+    , query : String
+    }
 
 
 init : ( Model, Cmd Msg )
@@ -69,16 +71,20 @@ query ($id: Int, $page: Int, $perPage: Int, $search: String) {
 """
 
 
----- HELPERS ----
+---- TYPES ---- 
 
 
 type alias Anime = 
     { id : String
     , name : String
+    , imageUrl : String
     }
 
 
-type alias Animes = [ Anime ]
+type alias Animes = [ Option Anime ]
+
+
+---- HELPERS ----
 
 
 encodeSearch : String -> Int -> Value
@@ -92,9 +98,10 @@ encodeSearch query pageNum =
 
 
 animeDecoder : Json.Decode.Decoder -> Anime
-    Json.Decode.object2 Anime
+    Json.Decode.object3 Anime
         ("id" := Json.Decode.string)
         ("name" := Json.Decode.string)
+        ("imageUrl" := Json.Decode.string)
 
 
 animeSearch : ??? -> Animes
@@ -113,9 +120,10 @@ viewConfig =
   in
     Menu.viewConfig
       { toId = .name
-      , ul = [ class "autocomplete-list" ] -- set classes for your list
-      , li = customizedLi -- given selection states and a person, create some Html!
+      , ul = [ class "autocomplete-list" ]
+      , li = customizedLi
       }
+
 
 view : Model -> Html Msg
 view model = 
