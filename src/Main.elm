@@ -1,10 +1,10 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, text, div, h1, img)
-import Html.Attributes exposing (src)
+import Html exposing (..)
+import Html.Attributes exposing (..)
 import Bootstrap.CDN as CDN
-import Bootstrap.Grid as Grid
+import Bootstrap.Table as Table
 
 
 ---- MODEL ----
@@ -38,23 +38,28 @@ update msg model =
 
 view : Model -> Html Msg
 view model = 
-    Grid.container []
+    div [ class "bingo-table" ]
         [ CDN.stylesheet
-        , Grid.row []
-            [ Grid.col [] [ text "One"]
-            , Grid.col [] [ text "Two"]
-            , Grid.col [] [ text "Three"]
-            ]
-        , Grid.row []
-            [ Grid.col [] [ text "Four"]
-            , Grid.col [] [ text "Five"]
-            , Grid.col [] [ text "Six"]
-            ]
-        , Grid.row []
-            [ Grid.col [] [ text "Seven"]
-            , Grid.col [] [ text "Eight"]
-            , Grid.col [] [ text "Nine"]
-            ]
+        , Table.simpleTable
+            ( Table.simpleThead []
+            , Table.tbody []
+                [ Table.tr []
+                    [ Table.td [] [ text "1" ]
+                    , Table.td [] [ text "2" ]
+                    , Table.td [] [ text "3" ]
+                    ]
+                , Table.tr []
+                    [ Table.td [] [ text "4" ]
+                    , Table.td [] [ text "5" ]
+                    , Table.td [] [ text "6" ]
+                    ]
+                , Table.tr []
+                    [ Table.td [] [ text "7" ]
+                    , Table.td [] [ text "8" ]
+                    , Table.td [] [ text "9" ]
+                    ]
+                ]
+            )
         ]
 
 
